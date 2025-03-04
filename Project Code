@@ -143,3 +143,48 @@ def return_to_main():
         widget.destroy()
     setup_main_screen()
 
+def show_emergency_form(emergency_type):
+    for widget in root.winfo_children():
+        widget.destroy()
+    
+    Label(root, text=f"You have chosen {emergency_type} Emergency", font=("Times New Roman", 30, "bold"), bg="lightgray").pack(pady=40)
+    Label(root, text="Please fill up the boxes to send an authorized personnel to your location.", font=("Times New Roman", 20), bg="lightgray").pack(pady=20)
+    
+    Label(root, text="Name:", font=("Times New Roman", 18), bg="lightgray").pack()
+    name_entry = Entry(root, width=70, font=("Times New Roman", 18))
+    name_entry.pack(pady=10)
+    
+    Label(root, text="Type of Emergency:", font=("Times New Roman", 18), bg="lightgray").pack()
+    emergency_dropdown = ttk.Combobox(root, values=["General Emergency", "Cardiac Emergency", "Fire Emergency"], state="readonly", width=68, font=("Times New Roman", 18))
+    emergency_dropdown.pack(pady=10)
+    emergency_dropdown.current(0)
+    
+    
+    Label(root, text="Address:", font=("Times New Roman", 18), bg="lightgray").pack()
+    address_entry = Entry(root, width=70, font=("Times New Roman", 18))
+    address_entry.pack(pady=10)
+
+    
+    def save_to_db():
+        name = name_entry.get()
+        address = address_entry.get()
+        emergency_type_selected = emergency_dropdown.get()
+        
+        if not name or not address:
+            messagebox.showwarning("Input Error", "Please fill in all fields.")
+            return
+        
+        conn = sqlite3.connect("emergency_db.sqlite")
+        cursor = conn.cursor()
+        
+        table_name = f"{emergency_type.lower()}_emergencies"
+        cursor.execute(f"INSERT INTO {table_name} (name, address, emergency_type) VALUES (?, ?, ?)", (name, address, emergency_type_selected))
+        
+        conn.commit()
+        conn.close()
+        
+        messagebox.showinfo("Success", f"An authorized personnel is on the way!\n\nDetails:\nName: {name}\nAddress: {address}\nEmergency Type: {emergency_type_selected}")
+        restart_program()
+    
+    Button(root, text="Submit", font=("Times New Roman", 18, "bold"), bg="green", fg="white", width=20, height=2, command=save_to_db).pack(pady=40)
+    Button(root, text="Go Back", font=("Times New Roman", 18, "bold"), bg="gray", fg="white", width=20, height=2, command=restart_program).pack(pady=20)
