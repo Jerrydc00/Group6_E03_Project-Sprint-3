@@ -3,12 +3,13 @@
 Procedure for the Project:
 
 1. Install VsCode and the following extensions in the Vscode:
-   a. Python
-   b. Python Debugger
-   c. Python Extension Pack
-   c. Sqlite Viewer
-2. Simply Insert the Project Code.py in the Vscode
-3. Run the program.
+1.a. Python
+1.b. Python Debugger
+1.c. Python Extension Pack
+1.d. Sqlite Viewer
+
+3. Simply Insert the Project Code.py in the Vscode
+4. Run the program.
 
 Note:
 The Program is stil incomplete.
